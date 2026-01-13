@@ -9,11 +9,14 @@ dotenv.config();
 
 const app = express();
 
+app.use(
+  cors({
+    origin: true, 
+    credentials: true,
+  })
+)
 
-app.use(cors({
-  origin: "http://localhost:5173", // <-- your frontend URL
-  credentials: true,
-}));
+app.use(cors());
 
 
 app.use(express.json());
@@ -21,12 +24,18 @@ app.use(express.json());
 
 connectDB(process.env.MONGO_URI);
 
+app.get("/", (req, res) => {
+  res.send("API is running");
+});
+
 
 app.use("/api/auth", authRoutes);
 app.use("/api/habits", habitRoutes);
 
 
+
 const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(` Server running on port ${PORT}`);
 });
