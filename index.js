@@ -11,7 +11,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "https://habit-tracker-gold-omega.vercel.app",
+    origin: "https://habit-tracker-ty6f.vercel.app",
     credentials: true,
   })
 );
@@ -29,5 +29,5 @@ app.use("/api/habits", habitRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(` Server running on port ${PORT}`);
 });
