@@ -1,8 +1,7 @@
-import bcrypt from "bcryptjs"
-import jwt from "jsonwebtoken"
-import User from "../models/User.js"
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import User from "../models/User.js";
 
-/* SIGNUP */
 export const signup = async (req, res) => {
   const { name, email, password } = req.body;
 
@@ -22,18 +21,12 @@ export const signup = async (req, res) => {
     expiresIn: "7d",
   });
 
-  res.cookie("token", token, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",
-  });
-
   res.status(201).json({
+    token,
     user: { id: user._id, name: user.name, email: user.email },
   });
 };
 
-/* LOGIN */
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -53,13 +46,8 @@ export const login = async (req, res) => {
     expiresIn: "7d",
   });
 
-  res.cookie("token", token, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "none",
-  });
-
   res.status(200).json({
+    token,
     user: { id: user._id, name: user.name, email: user.email },
   });
 };
