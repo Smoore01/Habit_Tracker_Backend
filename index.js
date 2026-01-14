@@ -9,28 +9,21 @@ dotenv.config();
 
 const app = express();
 
-
 app.use(
   cors({
     origin: [
-      "http://localhost:5173",
-      "https://habit-tracker-ty6f.vercel.app",
+      "http://localhost:5173", // Removed Vercel URL
     ],
     credentials: true,
   })
 );
 
-
-
 app.use(express.json());
-
 
 connectDB(process.env.MONGO_URI);
 
-
 app.use("/api/auth", authRoutes);
 app.use("/api/habits", habitRoutes);
-
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

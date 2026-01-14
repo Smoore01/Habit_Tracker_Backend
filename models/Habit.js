@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const habitSchema = mongoose.Schema(
+const habitSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -16,7 +16,7 @@ const habitSchema = mongoose.Schema(
 
     date: {
       type: Date,
-      required: true,
+      default: Date.now, // ✅ FIX: default to today
     },
 
     streak: {

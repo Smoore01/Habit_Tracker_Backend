@@ -1,81 +1,77 @@
-// controllers/habitController.js
 import Habit from "../models/Habit.js";
 
-// GET habits for logged-in user
-export const getAllHabits = async (req, res) => {
+
+export const getHabits = async (req, res) => {
   try {
-    const habits = await Habit.find({ user: req.user }).sort({ date: -1 });
-    res.json(habits);
+    const habits = await Habit.find({ user: req.user.id }).sort({
+      createdAt: -1,
+    });
+    res.status(200).json(habits);
   } catch (error) {
-    res.status(500).json({ message: "Error fetching habits" });
+    console.error("Get habits error:", error);
+    res.status(500).json({ message: "Failed to fetch habits" });
   }
 };
 
-// ADD habit
-export const addHabit = async (req, res) => {
-    try {
-      const { name, date } = req.body;
-  
-      if (!name || !date) {
-        return res.status(400).json({
-          message: "Name and date are required"
-        });
-      }
-  
-      const habit = await Habit.create({
-        name,
-        date: new Date(date),
-        user: req.user, // or req.user._id
-      });
-  
-      return res.status(201).json(habit);
-    } catch (error) {
-      console.error("Error adding habit:", error);
-  
-      return res.status(500).json({
-        message: "Failed to add habit",
-        error: error.message
-      });
-    }
-}
 
-// MARK habit done
-export const markHabitDone = async (req, res) => {
+export const addHabit = async (req, res) => {
+  try {
+    const { name } = req.body;
+
+    if (!name) {
+      return res.status(400).json({ message: "Habit name is required" });
+    }
+
+    const habit = await Habit.create({
+      name,
+      user: req.user.id,
+    });
+
+    res.status(201).json(habit);
+  } catch (error) {
+    console.error("Error adding habit:", error);
+    res.status(500).json({ message: "Failed to add habit" });
+  }
+};
+
+export const updateHabit = async (req, res) => {
   try {
     const habit = await Habit.findOne({
       _id: req.params.id,
-      user: req.user,
+      user: req.user.id,
     });
 
     if (!habit) {
       return res.status(404).json({ message: "Habit not found" });
     }
 
-    habit.completed = true;
-    habit.streak += 1;
+    habit.completed = !habit.completed;
+    await habit.save();
 
-    const updatedHabit = await habit.save();
-    res.json(updatedHabit);
+    res.status(200).json(habit);
   } catch (error) {
-    res.status(500).json({ message: "Error updating habit" });
+    console.error("Update habit error:", error);
+    res.status(500).json({ message: "Failed to update habit" });
   }
 };
 
-// DELETE habit
+/* =========================
+   DELETE HABIT
+========================= */
 export const deleteHabit = async (req, res) => {
   try {
-    const habit = await Habit.findOne({
+    const habit = await Habit.findOneAndDelete({
       _id: req.params.id,
-      user: req.user,
+      user: req.user.id,
     });
 
     if (!habit) {
       return res.status(404).json({ message: "Habit not found" });
     }
 
-    await habit.deleteOne();
-    res.json({ message: "Habit removed" });
+    res.status(200).json({ message: "Habit deleted" });
   } catch (error) {
-    res.status(500).json({ message: "Error deleting habit" });
+    console.error("Delete habit error:", error);
+    res.status(500).json({ message: "Failed to delete habit" });
   }
 };
