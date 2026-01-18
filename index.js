@@ -12,7 +12,8 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "http://localhost:5173", // Removed Vercel URL
+      "http://localhost:5173",
+      'https://habit-tracker-ujtp.vercel.app'
     ],
     credentials: true,
   })
