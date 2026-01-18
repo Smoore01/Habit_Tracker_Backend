@@ -16,7 +16,7 @@ const habitSchema = new mongoose.Schema(
 
     date: {
       type: Date,
-      default: Date.now, // ✅ FIX: default to today
+      default: Date.now, 
     },
 
     streak: {
